@@ -24,13 +24,13 @@ func (h UpdateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, conte
 
 	templateParams, err := NewTemplateParams(req.Body)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
 	err = h.updater.Update(context.Get("database").(DatabaseInterface), templateID, templateParams.ToModel())
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

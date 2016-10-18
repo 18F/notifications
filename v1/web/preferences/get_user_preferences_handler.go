@@ -24,7 +24,7 @@ func (h GetUserPreferencesHandler) ServeHTTP(w http.ResponseWriter, req *http.Re
 
 	parsed, err := h.preferences.Find(context.Get("database").(DatabaseInterface), userGUID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

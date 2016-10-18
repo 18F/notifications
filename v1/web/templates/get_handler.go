@@ -33,14 +33,14 @@ func (h GetHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 
 	template, err := h.finder.FindByID(context.Get("database").(DatabaseInterface), templateID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
 	var metadata map[string]interface{}
 	err = json.Unmarshal([]byte(template.Metadata), &metadata)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

@@ -28,7 +28,7 @@ func (h OrganizationHandler) ServeHTTP(w http.ResponseWriter, req *http.Request,
 
 	output, err := h.notify.Execute(conn, req, context, orgGUID, h.strategy, GUIDValidator{}, vcapRequestID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

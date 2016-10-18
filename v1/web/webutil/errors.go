@@ -1,6 +1,10 @@
 package webutil
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/ryanmoran/stack"
+	"github.com/pivotal-golang/lager"
+)
 
 type ParseError struct{}
 
@@ -57,3 +61,7 @@ func NewCriticalNotificationError(kindID string) CriticalNotificationError {
 func (e CriticalNotificationError) Error() string {
 	return e.Err.Error()
 }
+
+func LogError(context stack.Context, action string, err error, data ...lager.Data) {
+}
+

@@ -10,7 +10,7 @@ import (
 )
 
 type errorWriter interface {
-	Write(writer http.ResponseWriter, err error)
+	Write(writer http.ResponseWriter, err error, context stack.Context)
 }
 
 type templateCreator interface {
@@ -32,7 +32,7 @@ func NewCreateHandler(creator templateCreator, errWriter errorWriter) CreateHand
 func (h CreateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context stack.Context) {
 	templateParams, err := NewTemplateParams(req.Body)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
@@ -46,7 +46,7 @@ func (h CreateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, conte
 		Metadata: string(templateParams.Metadata),
 	})
 	if err != nil {
-		h.errorWriter.Write(w, webutil.TemplateCreateError{})
+		h.errorWriter.Write(w, webutil.TemplateCreateError{}, context)
 		return
 	}
 

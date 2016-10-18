@@ -27,13 +27,13 @@ func NewUpdateDefaultHandler(updater templateUpdater, errWriter errorWriter) Upd
 func (h UpdateDefaultHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context stack.Context) {
 	template, err := NewTemplateParams(req.Body)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
 	err = h.updater.Update(context.Get("database").(DatabaseInterface), models.DefaultTemplateID, template.ToModel())
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 	}
 
 	w.WriteHeader(http.StatusNoContent)

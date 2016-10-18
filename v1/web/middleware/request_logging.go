@@ -38,6 +38,8 @@ func (r RequestLogging) ServeHTTP(response http.ResponseWriter, request *http.Re
 
 	logData := lager.Data{
 		VCAPRequestIDKey: requestID,
+		"method": request.Method,
+		"path":   request.URL.Path,
 	}
 
 	apiVersion := request.Header.Get("X-NOTIFICATIONS-VERSION")
@@ -47,10 +49,7 @@ func (r RequestLogging) ServeHTTP(response http.ResponseWriter, request *http.Re
 
 	logSession := r.logger.Session("request", logData)
 
-	logSession.Info("incoming", lager.Data{
-		"method": request.Method,
-		"path":   request.URL.Path,
-	})
+	logSession.Info("incoming")
 
 	context.Set("logger", logSession)
 	context.Set(VCAPRequestIDKey, requestID)

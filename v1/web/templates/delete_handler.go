@@ -30,7 +30,7 @@ func (h DeleteHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, conte
 
 	err := h.deleter.Delete(connection, templateID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 	}
 
 	w.WriteHeader(http.StatusNoContent)

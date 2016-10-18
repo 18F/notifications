@@ -8,6 +8,8 @@ import (
 	"github.com/cloudfoundry-incubator/notifications/v1/collections"
 	"github.com/cloudfoundry-incubator/notifications/v1/models"
 	"github.com/cloudfoundry-incubator/notifications/v1/services"
+	"github.com/ryanmoran/stack"
+	"github.com/pivotal-golang/lager"
 )
 
 type ErrorWriter struct{}
@@ -16,7 +18,7 @@ func NewErrorWriter() ErrorWriter {
 	return ErrorWriter{}
 }
 
-func (writer ErrorWriter) Write(w http.ResponseWriter, err error) {
+func (writer ErrorWriter) Write(w http.ResponseWriter, err error, context stack.Context) {
 	switch err.(type) {
 	case UAAScopesError, CriticalNotificationError, collections.TemplateAssignmentError, MissingUserTokenError, ValidationError:
 		w.WriteHeader(422)
@@ -37,4 +39,8 @@ func (writer ErrorWriter) Write(w http.ResponseWriter, err error) {
 	json.NewEncoder(w).Encode(map[string][]string{
 		"errors": []string{err.Error()},
 	})
+
+	if logger, ok := context.Get("logger").(lager.Logger); ok {
+		logger.Error("error", err)
+	}
 }

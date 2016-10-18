@@ -15,7 +15,7 @@ type GetHandler struct {
 }
 
 type errorWriter interface {
-	Write(writer http.ResponseWriter, err error)
+	Write(writer http.ResponseWriter, err error, context stack.Context)
 }
 
 type messageFinder interface {
@@ -34,7 +34,7 @@ func (h GetHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 
 	message, err := h.finder.Find(context.Get("database").(DatabaseInterface), messageID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

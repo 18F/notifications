@@ -11,7 +11,7 @@ import (
 )
 
 type errorWriter interface {
-	Write(writer http.ResponseWriter, err error)
+	Write(writer http.ResponseWriter, err error, context stack.Context)
 }
 
 type preferencesFinder interface {
@@ -34,7 +34,7 @@ func (h GetPreferencesHandler) ServeHTTP(w http.ResponseWriter, req *http.Reques
 	token := context.Get("token").(*jwt.Token)
 
 	if _, ok := token.Claims["user_id"]; !ok {
-		h.errorWriter.Write(w, webutil.MissingUserTokenError{errors.New("Missing user_id from token claims.")})
+		h.errorWriter.Write(w, webutil.MissingUserTokenError{errors.New("Missing user_id from token claims.")}, context)
 		return
 	}
 
@@ -42,7 +42,7 @@ func (h GetPreferencesHandler) ServeHTTP(w http.ResponseWriter, req *http.Reques
 
 	parsed, err := h.preferences.Find(context.Get("database").(DatabaseInterface), userID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

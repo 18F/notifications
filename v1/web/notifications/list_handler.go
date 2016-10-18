@@ -42,7 +42,7 @@ func NewListHandler(notificationsFinder listsAllClientsAndNotifications, errWrit
 func (h ListHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context stack.Context) {
 	clients, notifications, err := h.finder.AllClientsAndNotifications(context.Get("database").(DatabaseInterface))
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

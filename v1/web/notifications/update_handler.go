@@ -10,7 +10,7 @@ import (
 )
 
 type errorWriter interface {
-	Write(writer http.ResponseWriter, err error)
+	Write(writer http.ResponseWriter, err error, context stack.Context)
 }
 
 type notificationsUpdater interface {
@@ -34,7 +34,7 @@ func (h UpdateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, conte
 
 	updateParams, err := NewNotificationParams(req.Body)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h UpdateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, conte
 
 	err = h.updater.Update(context.Get("database").(DatabaseInterface), updateParams.ToModel(clientID, notificationID))
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

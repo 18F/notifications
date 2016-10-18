@@ -35,7 +35,7 @@ func (h ListAssociationsHandler) ServeHTTP(w http.ResponseWriter, req *http.Requ
 
 	associations, err := h.lister.ListAssociations(database.Connection(), templateID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

@@ -28,7 +28,7 @@ func NewGetDefaultHandler(finder templateFinder, errWriter errorWriter) GetDefau
 func (h GetDefaultHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context stack.Context) {
 	template, err := h.finder.FindByID(context.Get("database").(DatabaseInterface), models.DefaultTemplateID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

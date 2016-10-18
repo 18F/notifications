@@ -36,14 +36,14 @@ func (h AssignTemplateHandler) ServeHTTP(w http.ResponseWriter, req *http.Reques
 	var templateAssignment TemplateAssignment
 	err := json.NewDecoder(req.Body).Decode(&templateAssignment)
 	if err != nil {
-		h.errorWriter.Write(w, webutil.ParseError{})
+		h.errorWriter.Write(w, webutil.ParseError{}, context)
 		return
 	}
 
 	database := context.Get("database").(DatabaseInterface)
 	err = h.templateAssigner.AssignToNotification(database.Connection(), clientID, notificationID, templateAssignment.Template)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

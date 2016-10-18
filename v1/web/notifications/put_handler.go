@@ -34,13 +34,13 @@ func (h PutHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 
 	parameters, err := NewClientRegistrationParams(req.Body)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
 	err = parameters.Validate()
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (h PutHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 
 	kinds, err := h.ValidateCriticalScopes(token.Claims["scope"], generatedKinds, client)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
@@ -75,7 +75,7 @@ func (h PutHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 	err = h.registrar.Register(transaction, client, kinds)
 	if err != nil {
 		transaction.Rollback()
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
@@ -83,14 +83,14 @@ func (h PutHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, context 
 		err = h.registrar.Prune(transaction, client, kinds)
 		if err != nil {
 			transaction.Rollback()
-			h.errorWriter.Write(w, err)
+			h.errorWriter.Write(w, err, context)
 			return
 		}
 	}
 
 	err = transaction.Commit()
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

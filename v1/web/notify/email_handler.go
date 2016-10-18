@@ -17,7 +17,7 @@ type notifyExecutor interface {
 }
 
 type errorWriter interface {
-	Write(writer http.ResponseWriter, err error)
+	Write(writer http.ResponseWriter, err error, context stack.Context)
 }
 
 type Dispatcher interface {
@@ -45,7 +45,7 @@ func (h EmailHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, contex
 
 	output, err := h.notify.Execute(conn, req, context, "", h.strategy, EmailValidator{}, vcapRequestID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

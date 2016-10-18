@@ -26,7 +26,7 @@ func (h EveryoneHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, con
 
 	output, err := h.notify.Execute(connection, req, context, "", h.strategy, GUIDValidator{}, vcapRequestID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 

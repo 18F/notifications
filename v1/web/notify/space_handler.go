@@ -28,7 +28,7 @@ func (h SpaceHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, contex
 
 	output, err := h.notify.Execute(conn, req, context, spaceGUID, h.strategy, GUIDValidator{}, vcapRequestID)
 	if err != nil {
-		h.errorWriter.Write(w, err)
+		h.errorWriter.Write(w, err, context)
 		return
 	}
 
